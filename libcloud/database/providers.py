@@ -19,9 +19,9 @@ from libcloud.database.types import Provider
 
 DRIVERS = {
     Provider.DUMMY:
-        ('libcloud.database.drivers.dummy', 'DummyDriver'),
+        ('libcloud.database.drivers.dummy', 'DummyDatabaseDriver'),
     Provider.HEROKU:
-        ('libcloud.database.drivers.heroku', 'HerokuDriver'),
+        ('libcloud.database.drivers.heroku', 'HerokuDatabaseDriver'),
     Provider.RDS:
         ('libcloud.database.drivers.rds', 'RDSDriver'),
     Provider.RACKSPACE:

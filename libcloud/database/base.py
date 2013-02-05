@@ -29,7 +29,7 @@ class Size(object):
         self.extras = extras or {}
 
     def __repr__(self):
-        return ('<Size: id=%s, name=%s' % (self.id, self.description))
+        return ('<Size: id=%s, name=%s' % (self.id, self.name))
 
 
 class Database(object):

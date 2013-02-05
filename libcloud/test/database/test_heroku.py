@@ -17,22 +17,22 @@ import sys
 import unittest
 
 from libcloud.database.drivers.dummy import DummyDatabaseDriver
-from libcloud.database.drivers.rds import RDSDriver
-from libcloud.test.database.mocks.rds import RDSMockHttp
-from libcloud.test.secrets import DB_RDS_PARAMS
+from libcloud.database.drivers.heroku import HerokuDatabaseDriver
+from libcloud.test.database.mocks.heroku import HerokuMockHttp
+from libcloud.test.secrets import DB_HEROKU_PARAMS
 
-from .test_loadbalancer import BaseLBTests
+from .test_database import BaseDBTests
 
 
-class RDSTests(BaseLBTests):
+class RDSTests(BaseDBTests):
 
     def setUp(self):
-        RDSMockHttp.test = self
-        RDSDriver.connectionCls.conn_classes = (None,
-                                                      RDSMockHttp)
+        HerokuMockHttp.test = self
+        HerokuDatabaseDriver.connectionCls.conn_classes = (None,
+                                                      HerokuMockHttp)
 
-        self.driver = RDSDriver(*LB_ELB_PARAMS)
-        self.mock = DummyDatabaseDriver('', '')
+        self.driver = HerokuDatabaseDriver(*DB_HEROKU_PARAMS)
+        self.mock = DummyDatabaseDriver()
 
         self.setUpMock()
 

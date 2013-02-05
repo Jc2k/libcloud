@@ -209,6 +209,3 @@ class RDSMockHttp(MockHttpTestCase):
         body = ET.tostring(result)
         return (httplib.OK, body, {}, httplib.responses[httplib.OK])
 
-
-if __name__ == "__main__":
-    sys.exit(unittest.main())
