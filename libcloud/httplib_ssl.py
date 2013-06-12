@@ -34,6 +34,8 @@ class LibcloudHTTPSConnection(httplib.HTTPSConnection):
     """
     verify = False        # does not verify
     ca_cert = None        # no default CA Certificate
+    # SSL_VERSION = ssl.PROTOCOL_TLSv1
+    SSL_VERSION = ssl.PROTOCOL_SSLv3
 
     def __init__(self, *args, **kwargs):
         """Constructor
@@ -105,7 +107,7 @@ class LibcloudHTTPSConnection(httplib.HTTPSConnection):
                                     self.cert_file,
                                     cert_reqs=ssl.CERT_REQUIRED,
                                     ca_certs=self.ca_cert,
-                                    ssl_version=ssl.PROTOCOL_TLSv1)
+                                    ssl_version=self.SSL_VERSION)
         cert = self.sock.getpeercert()
         if not self._verify_hostname(self.host, cert):
             raise ssl.SSLError('Failed to verify hostname')

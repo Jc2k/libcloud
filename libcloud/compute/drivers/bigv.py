@@ -60,9 +60,6 @@ class BigVConnection(ConnectionUserAndKey):
     responseCls = BigVResponse
 
     def add_default_headers(self, headers):
-        headers['Accept'] = 'application/json'
-        headers['Content-Type'] = 'application/json'
-
         user_b64 = base64.b64encode(b('%s:%s' % (self.user_id, self.key)))
         headers['Authorization'] = 'Basic %s' % (user_b64.decode('utf-8'))
         return headers
@@ -101,18 +98,17 @@ class BigVNodeDriver(NodeDriver):
 
         self.account = kwargs['account']
 
-        self.group_url = '/accounts/%s/groups/%s/' % (self.account, self.group)
+        self.group_url = '/accounts/%s/groups/%s' % (self.account, self.group)
 
         self.connection.host = kwargs['location'] + '.bigv.io'
 
     def list_images(self):
-        images = ['centos-5.8', 'centos-6.2', 'lucid', 'maverick', 'natty',
-                  'oneiric', 'squeeze', 'symbiosis', 'winweb2k8r2', 'none', ]
-
-        images = []
+	images = ['centos-5.8', 'centos-6.3', 'oneiric', 'precise', 'squeeze',
+                  'symbiosis', 'wheezy', 'winweb2k8r2', 'winstd2012', 'none', ]
+        retval = []
         for image in images:
-            images.append(NodeImage(id=image, name=image, driver=self.connection.driver, extra={}))
-        return images
+            retval.append(NodeImage(id=image, name=image, driver=self.connection.driver, extra={}))
+        return retval
 
     def list_sizes(self):
         return []
@@ -155,17 +151,18 @@ class BigVNodeDriver(NodeDriver):
         size = kwargs['size']
         image = kwargs['image']
 
-        generated_password = binascii.hexlify(os.urandom(16))
+        generated_password = binascii.hexlify(os.urandom(8))
+        generated_password = "ZBDcyliNgD"
 
         payload = {
             "reimage": {
-                "distribution": size.id,
+                "distribution": image.id,
                 "root_password": generated_password,
                 "type": "application/vnd.bigv.reimage",
             },
             "discs": [{
                 "storage_grade": "sata",
-                "size": 2048,
+                "size": 5120,
                 "label": "vda",
                 "type": "application/vnd.bigv.disc",
             }],
@@ -174,16 +171,16 @@ class BigVNodeDriver(NodeDriver):
                 "hardware_profile": None,
                 "autoreboot_on": True,
                 "cdrom_url": None,
-                "memory": 2048,
+                "memory": 1024,
                 "name": name,
-                "cores": 1,
+                "cores": "1",
                 "type": "application/vnd.bigv.virtual-machine",
             },
             "type": "application/vnd.bigv.vm-create",
         }
 
         data = json.dumps(payload)
-        result = self.connection.request(self.group_url+'vm_create', data=data,
+        result = self.connection.request(self.group_url+'/vm_create', data=data,
                                          method='POST')
         return self._to_node(result.object['virtual_machine'], generated_password=generated_password)
 

@@ -126,7 +126,7 @@ DRIVERS = {
     Provider.DIGITAL_OCEAN:
         ('libcloud.compute.drivers.digitalocean', 'DigitalOceanNodeDriver'),
     Provider.BIGV:
-        ('libcloud.compute.drivers.bigv', 'BigVDriver'),
+        ('libcloud.compute.drivers.bigv', 'BigVNodeDriver'),
 }
 
 
