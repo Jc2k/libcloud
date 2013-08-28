@@ -47,7 +47,7 @@ def enable_debug(fo):
     Connection.conn_classes = (LoggingHTTPConnection,
                                LoggingHTTPSConnection)
 
-    from libcloud.common.subprocess import Connection
+    from libcloud.common.process import Connection
     Connection.log = fo
 
 

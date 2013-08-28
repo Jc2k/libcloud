@@ -16,7 +16,6 @@
 # This module provides a Connection like abstraction around subprocess
 # interaction
 
-
 import os
 import shlex
 import subprocess
@@ -89,6 +88,9 @@ class Connection(object):
         return p.returncode, stdout, stderr
 
     def _silent_request(self, command, data):
+        # Popen.communicate hangs when child process creates forks and doesnt close the fd's
+        # http://bugs.python.org/issue4216
+        # http://bugs.python.org/issue13422
         stdin = subprocess.PIPE if data else None
         with open(os.devnull, "w") as null:
             p = subprocess.Popen(command, stdin=stdin, stdout=null, stderr=null)
@@ -96,4 +98,9 @@ class Connection(object):
                 p.stdin.write(data)
                 p.stdin.close()
             return p.wait()
+
+
+if __name__ == "__main__":
+    p = Connection()
+    r = p.request(["python", os.path.expanduser("~/daemon.py")])
 
