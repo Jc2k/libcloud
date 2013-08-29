@@ -20,8 +20,14 @@ from libcloud.common.process import Connection, Response
 from libcloud.common.base import BaseDriver
 
 
+class MyConnection(Connection):
+
+    def get_command_prefix(self):
+        return ['myvmtool']
+
+
 class MyDummyDriver(BaseDriver):
-    connectionCls = Connection
+    connectionCls = MyConnection
 
     def dummy_operation(self):
         return self.connection.request('ls').body.split(',')
@@ -39,5 +45,5 @@ class TestSubprocessConnection(unittest.TestCase):
         m = MyDummyDriver(None)
         self.assertEqual(m.dummy_operation(), ['a', 'b', 'c'])
 
-        popen.assert_called_with(['ls'], stdin=None, stdout=-1, stderr=-1)
+        popen.assert_called_with(['myvmtool', 'ls'], stdin=None, stdout=-1, stderr=-1)
 

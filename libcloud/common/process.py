@@ -58,18 +58,25 @@ class Connection(object):
     def connect(self):
         pass
 
+    def get_command_prefix(self):
+        return []
+
     def request(self, command, data='', capture_output=True):
+        cmd = self.get_command_prefix()
+
         if not isinstance(command, list):
-            command = shlex.split(command)
+            cmd.extend(shlex.split(command))
+        else:
+            cmd.extend(command)
 
         if self.log:
-            self.log.write(' '.join(quote(c) for c in command) + '\n')
+            self.log.write(' '.join(quote(c) for c in cmd) + '\n')
 
         if not capture_output:
             stdout, stderr = '', ''
-            returncode = self._silent_request(command, data)
+            returncode = self._silent_request(cmd, data)
         else:
-            returncode, stdout, stderr = self._request(command, data)
+            returncode, stdout, stderr = self._request(cmd, data)
 
         if self.log:
             self.log.write("# returncode is %d\n" % returncode)
